@@ -1,58 +1,49 @@
-pipeline{
 
-	agent any
+pipeline {
+    agent any
 
-	environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub-credentials')
-	}
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+    }
 
-	stages {
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker build -t sitharamaneesh/react-app .'
+            }
+        }
 
-		stage('Build') {
+        stage('Login') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
 
-			steps {
-				sh 'docker build -t sitharamaneesh/react-app .'
-			}
-		}
+        stage('Push') {
+            steps {
+                sh 'docker push sitharamaneesh/react-app'
+            }
+        }
 
-		stage('Login') {
+        stage('Deploy to K8s') {
+            steps {
+                script {
+                    try {
+                        sh 'kubectl apply -f deployment.yaml'
+                        sh 'kubectl apply -f service.yaml'
+                        
+                    } catch (error) {
+                        // Handle error
+                    }
+                }
+            }
+        }
+    }
 
-			steps {
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-			}
-		}
-
-
-		stage('Push') {
-
-			steps {
-				sh 'docker push sitharamaneesh/react-app'
-			}
-		}
-
-
-		stage('Deploy to K8s')
-		{
-			steps{
-					
-					script{
-						try{
-							kubectl apply -f .
-
-					       	}      catch(error)
-							{
-
-							}
-					      }
-				}
-			
-        	}
-
-       }
-	post {
-		always {
-			sh 'docker logout'
-		}
-	}
-
+    post {
+        always {
+            sh 'docker logout'
+        }
+    }
 }
+
