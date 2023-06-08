@@ -34,13 +34,10 @@ pipeline{
 		stage('Deploy to K8s')
 		{
 			steps{
-				sshagent(['k8s-jenkins'])
-				{
-					sh 'scp -r -o StrictHostKeyChecking=no node-deployment.yaml root@34.138.19.121:/root'
 					
 					script{
 						try{
-							sh 'ssh root@34.138.19.121 kubectl apply -f /root/deployment.yaml --kubeconfig=/root/kube.yaml'
+							kubectl apply -f .
 
 							}catch(error)
 							{
@@ -48,8 +45,7 @@ pipeline{
 							}
 					}
 				}
-			}
-		}
+			
 	}
 
 	post {
