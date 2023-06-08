@@ -39,16 +39,16 @@ pipeline{
 						try{
 							kubectl apply -f .
 
-							}catch(error)
+					       	}      catch(error)
 							{
 
 							}
-					}
+					      }
 				}
 			
-	}
+        	}
 
-}
+       }
 	post {
 		always {
 			sh 'docker logout'
