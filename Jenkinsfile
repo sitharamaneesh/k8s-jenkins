@@ -7,7 +7,7 @@ pipeline{
 	}
 
 	
-stages {
+node {
 
     stage('Initialize')
     {
@@ -38,9 +38,9 @@ stages {
                 sh 'bash ./jenkins/deliver.sh'
         }
 
-
+}
 	
-
+stages{
 		stage('Build') {
 
 			steps {
