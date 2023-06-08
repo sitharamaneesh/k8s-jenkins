@@ -14,6 +14,8 @@ spec:
       labels:
         app: react-app 
     spec:
+      spec:
+       serviceAccountName: jenkins-sa
       containers:
       - name: react-app #The name of the react.js application container
         image: sitharamaneesh/react-app:latest #The Docker image for building the React.js application container
