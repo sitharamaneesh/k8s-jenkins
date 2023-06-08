@@ -34,14 +34,14 @@ pipeline {
       }
     }
 
-#    stage('Configure Kubernetes credentials') {
-#      steps {
-#        withCredentials([kubeconfigFile(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG')]) {
-#          // Set the KUBECONFIG environment variable
-#          sh 'export KUBECONFIG=$KUBECONFIG'
-#        }
-#      }
-#    }
+//    stage('Configure Kubernetes credentials') {
+//      steps {
+//        withCredentials([kubeconfigFile(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG')]) {
+//          // Set the KUBECONFIG environment variable
+//          sh 'export KUBECONFIG=$KUBECONFIG'
+//        }
+//      }
+//    }
 
     stage('Deploying React.js container to Kubernetes') {
       steps {
