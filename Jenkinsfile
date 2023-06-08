@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -9,19 +8,31 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -t sitharamaneesh/react-app .'
+                script {
+                    docker.image('docker:stable').inside {
+                        sh 'docker build -t sitharamaneesh/react-app .'
+                    }
+                }
             }
         }
 
         stage('Login') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                script {
+                    docker.image('docker:stable').inside {
+                        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                    }
+                }
             }
         }
 
         stage('Push') {
             steps {
-                sh 'docker push sitharamaneesh/react-app'
+                script {
+                    docker.image('docker:stable').inside {
+                        sh 'docker push sitharamaneesh/react-app'
+                    }
+                }
             }
         }
 
@@ -31,7 +42,7 @@ pipeline {
                     try {
                         sh 'kubectl apply -f deployment.yaml'
                         sh 'kubectl apply -f service.yaml'
-                        
+
                     } catch (error) {
                         // Handle error
                     }
@@ -40,9 +51,14 @@ pipeline {
         }
     }
 
+
     post {
         always {
-            sh 'docker logout'
+            script {
+                docker.image('docker:stable').inside {
+                    sh 'docker logout'
+                }
+            }
         }
     }
 }
