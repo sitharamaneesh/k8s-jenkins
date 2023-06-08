@@ -7,7 +7,7 @@ pipeline{
 	}
 
 	
-node {
+stages {
 
     stage('Initialize')
     {
