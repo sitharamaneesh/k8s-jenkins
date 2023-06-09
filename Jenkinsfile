@@ -48,7 +48,7 @@ pipeline {
 //        script {
 //          kubernetesDeploy configs: 'deployment.yaml,service.yaml', kubeconfigId: 'kubeconfig-credentials'
 //        }
-
+//       }
       stage('Deploy to Kubernetes') {
       steps {
         script {
@@ -57,7 +57,7 @@ pipeline {
         }
       }
 
-      }
+      
     }
   }
 }
