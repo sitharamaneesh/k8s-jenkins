@@ -2,7 +2,7 @@ pipeline {
   environment {
     dockerimagename = "sitharamaneesh/react-app"
     dockerImage = ""
-    kubeconfigPath = "/root/.kube/config"
+    kubeconfigPath = "/var/lib/jenkins/config"
   }
 
   agent any
