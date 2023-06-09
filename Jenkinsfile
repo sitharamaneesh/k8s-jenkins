@@ -34,28 +34,21 @@ pipeline {
       }
     }
 
-//    stage('Configure Kubernetes credentials') {
-//      steps {
-//        withCredentials([kubeconfigFile(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG')]) {
-//          // Set the KUBECONFIG environment variable
-//          sh 'export KUBECONFIG=$KUBECONFIG'
-//        }
-//      }
-//    }
-
-//    stage('Deploying React.js container to Kubernetes') {
-//      steps {
-//        script {
-//          kubernetesDeploy configs: 'deployment.yaml,service.yaml', kubeconfigId: 'kubeconfig-credentials'
-//        }
-//       }
-      stage('Deploy to Kubernetes') {
+    stage('Configure Kubernetes credentials') {
       steps {
-        script {
-          sh "kubectl --kubeconfig=${kubeconfig} apply -f deployment.yaml"
-          sh "kubectl --kubeconfig=${kubeconfig} apply -f service.yaml"
+        withCredentials([kubeconfigFile(credentialsId: 'kubeconfig-credentials1', variable: 'KUBECONFIG')]) {
+          // Set the KUBECONFIG environment variable
+          sh 'export KUBECONFIG=$KUBECONFIG'
         }
       }
+    }
+
+    stage('Deploying React.js container to Kubernetes') {
+      steps {
+        script {
+          kubernetesDeploy configs: 'deployment.yaml,service.yaml', kubeconfigId: 'kubeconfig-credentials1'
+        }
+       }
 
       
     }
