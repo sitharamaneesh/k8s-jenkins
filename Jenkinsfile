@@ -43,11 +43,20 @@ pipeline {
 //      }
 //    }
 
-    stage('Deploying React.js container to Kubernetes') {
+//    stage('Deploying React.js container to Kubernetes') {
+//      steps {
+//        script {
+//          kubernetesDeploy configs: 'deployment.yaml,service.yaml', kubeconfigId: 'kubeconfig-credentials'
+//        }
+
+      stage('Deploy to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy configs: 'deployment.yaml,service.yaml', kubeconfigId: 'kubeconfig-credentials'
+          sh "kubectl --kubeconfig=${kubeconfig} apply -f deployment.yaml"
+          sh "kubectl --kubeconfig=${kubeconfig} apply -f service.yaml"
         }
+      }
+
       }
     }
   }
