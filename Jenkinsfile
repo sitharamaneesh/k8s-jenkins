@@ -2,7 +2,6 @@ pipeline {
   environment {
     dockerimagename = "sitharamaneesh/react-app"
     dockerImage = ""
-    kubeconfigPath = "/root/.kube/config"
   }
 
   agent any
@@ -35,13 +34,23 @@ pipeline {
       }
     }
 
+    stage('Configure Kubernetes credentials') {
+      steps {
+        withCredentials([kubeconfigFile(credentialsId: 'kubeconfig-credentials1', variable: 'KUBECONFIG')]) {
+          // Set the KUBECONFIG environment variable
+          sh 'export KUBECONFIG=$KUBECONFIG'
+        }
+      }
+    }
+
     stage('Deploying React.js container to Kubernetes') {
       steps {
         script {
-          sh "kubectl --kubeconfig=${kubeconfigPath} apply -f deployment.yaml"
-          sh "kubectl --kubeconfig=${kubeconfigPath} apply -f service.yaml"
+          kubernetesDeploy configs: 'deployment.yaml,service.yaml', kubeconfigId: 'kubeconfig-credentials1'
         }
-      }
+       }
+
+      
     }
   }
 }
